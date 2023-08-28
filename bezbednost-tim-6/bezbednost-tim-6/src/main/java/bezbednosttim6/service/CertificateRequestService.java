@@ -208,9 +208,14 @@ public class CertificateRequestService {
         return request;
     }
 
-    private CertificateRequest accept(User user, CertificateRequest request) throws Exception {
+    private CertificateRequest accept(User user2, CertificateRequest request) throws Exception {
         request.setStatus(RequestStatus.ACCEPTED);
         request = certificateRequestRepo.save(request);
+        Optional<User> opp = userRepo.findUserById(request.getUserId());
+        User user = user2;
+        if (opp.isPresent()) {
+            user = opp.get();
+        }
         util.getNewLogId();
         logger.info("Request with id: " + request.getId().toString() + " successfully accepted");
 
